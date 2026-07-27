@@ -17,25 +17,31 @@ app.use(helmet());
 
 // CORS configuration - allow multiple origins
 const allowedOrigins = [
-  'http://localhost:3000',
-  'https://xcod-website.vercel.app',
-  'https://xcodwebsite.vercel.app',
-  process.env.FRONTEND_URL
+  "http://localhost:3000",
+  "https://xcod-website.vercel.app",
+  "https://xcodwebsite.vercel.app",
+  "https://xcdgocpvtltd.com",
+  "https://www.xcdgocpvtltd.com",
+  process.env.FRONTEND_URL,
 ].filter(Boolean);
 
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl, etc.)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
-}));
+app.use(
+  cors({
+    origin(origin, callback) {
+      console.log("Origin:", origin);
+
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      console.log("Blocked Origin:", origin);
+      return callback(new Error(`CORS blocked: ${origin}`));
+    },
+    credentials: true,
+  })
+);
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 
