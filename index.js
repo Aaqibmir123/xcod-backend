@@ -6,6 +6,7 @@ import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/authRoutes.js';
+import aboutRoutes from './routes/aboutRoutes.js';
 
 dotenv.config();
 
@@ -59,6 +60,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/about', aboutRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
