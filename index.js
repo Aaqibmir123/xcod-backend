@@ -67,6 +67,43 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Server is running' });
 });
 
+// Setup endpoint to create admin user (for initial setup only)
+app.post('/api/setup', async (req, res) => {
+  try {
+    const User = (await import('./models/User.js')).default;
+    const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+    
+    let user = await User.findOne({ email: ADMIN_EMAIL });
+    
+    if (!user) {
+      user = new User({
+        email: ADMIN_EMAIL,
+        password: ADMIN_PASSWORD,
+        role: 'admin'
+      });
+      await user.save();
+      return res.status(201).json({
+        success: true,
+        message: 'Admin user created successfully',
+        email: ADMIN_EMAIL
+      });
+    }
+    
+    return res.status(200).json({
+      success: true,
+      message: 'Admin user already exists',
+      email: ADMIN_EMAIL
+    });
+  } catch (error) {
+    console.error('Setup error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
