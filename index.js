@@ -7,6 +7,10 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/authRoutes.js';
 import aboutRoutes from './routes/aboutRoutes.js';
+import partnerRoutes from './routes/partnerRoutes.js';
+import testimonialRoutes from './routes/testimonialRoutes.js';
+import contactRoutes from './routes/contactRoutes.js';
+import sectionContentRoutes from './routes/sectionContentRoutes.js';
 
 dotenv.config();
 
@@ -61,6 +65,10 @@ mongoose.connect(process.env.MONGODB_URI)
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/about', aboutRoutes);
+app.use('/api/partners', partnerRoutes);
+app.use('/api/testimonials', testimonialRoutes);
+app.use('/api/contact', contactRoutes);
+app.use('/api/section-content', sectionContentRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

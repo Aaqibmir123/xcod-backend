@@ -22,16 +22,13 @@ const userSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Hash password before saving
-userSchema.pre('save', function(next) {
-  if (!this.isModified('password')) return next();
-  
-  bcrypt.hash(this.password, 12)
-    .then(hash => {
-      this.password = hash;
-      next();
-    })
-    .catch(err => next(err));
+// Hash password before saving (Fixed Async Hook)
+userSchema.pre('save', async function() {
+  // Agar password modify nahi hua toh aage badh jao (return kar do)
+  if (!this.isModified('password')) return;
+
+  // Async function mein errors throw hote hain, next(err) ki zarurat nahi hoti
+  this.password = await bcrypt.hash(this.password, 12);
 });
 
 // Compare password method
